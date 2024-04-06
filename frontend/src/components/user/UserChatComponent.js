@@ -5,11 +5,6 @@ import { useSelector } from "react-redux";
 
 const UserChatComponent = () => {
   const [socket, setSocket] = useState(false);
-  //   let chat = [
-  //       {"client": "msg"},
-  //       {"client": "msg"},
-  //       {"admin": "msg"},
-  //   ]
   const [chat, setChat] = useState([]);
   const [messageReceived, setMessageReceived] = useState(false);
   const [chatConnectionInfo, setChatConnectionInfo] = useState(false);
@@ -19,8 +14,8 @@ const UserChatComponent = () => {
 
   useEffect(() => {
     if (!userInfo.isAdmin) {
-        
-         
+        setReconnect(false);
+         var audio = new Audio("/audio/chat-msg.mp3");
       const socket = socketIOClient();
       socket.on("no admin", (msg) => {
           setChat((chat) => {
@@ -32,14 +27,14 @@ const UserChatComponent = () => {
               return [...chat, { admin: msg }];
           })
           setMessageReceived(true);
-        
+          audio.play();
           const chatMessages = document.querySelector(".cht-msg");
           chatMessages.scrollTop = chatMessages.scrollHeight;
       })
       setSocket(socket);
       socket.on("admin closed chat", () => {
          setChat([]); 
-         
+         setChatConnectionInfo("Admin closed chat. Type something and submit to reconnect");
          setReconnect(true);
       })
       return () => socket.disconnect();
@@ -53,7 +48,7 @@ const UserChatComponent = () => {
     setChatConnectionInfo("");
     setMessageReceived(false);
     const msg = document.getElementById("clientChatMsg");
-    
+    let v = msg.value.trim();
     if (v === "" || v === null || v === false || !v) {
       return;
     }
@@ -61,6 +56,7 @@ const UserChatComponent = () => {
     setChat((chat) => {
       return [...chat, { client: v }];
     });
+    msg.focus();
     setTimeout(() => {
          msg.value = "";
          const chatMessages = document.querySelector(".cht-msg");
