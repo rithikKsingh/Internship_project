@@ -5,6 +5,11 @@ import { useSelector } from "react-redux";
 
 const UserChatComponent = () => {
   const [socket, setSocket] = useState(false);
+  //   let chat = [
+  //       {"client": "msg"},
+  //       {"client": "msg"},
+  //       {"admin": "msg"},
+  //   ]
   const [chat, setChat] = useState([]);
   const [messageReceived, setMessageReceived] = useState(false);
   const [chatConnectionInfo, setChatConnectionInfo] = useState(false);
