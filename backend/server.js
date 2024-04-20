@@ -1,9 +1,12 @@
+require("dotenv").config();
+var helmet=require("helmet")
 const {createServer}=require("http")
 const {Server}=require("socket.io")
 const express=require('express');
 const fileUpload=require("express-fileupload")
 const cookieParser=require("cookie-parser")
 const app=express();
+app.use(helmet())
 // const port=6000;
 const httpServer=createServer(app)
 global.io=new Server(httpServer)
