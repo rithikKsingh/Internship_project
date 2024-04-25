@@ -32,66 +32,6 @@ const AnalyticsPageComponent = ({
   useEffect(() => {
     const socket = socketIOClient();
     let today = new Date().toDateString();
-    // const handler = (newOrder) => {
-    //   var orderDate = new Date(newOrder.createdAt).toLocaleString("en-US", {
-    //     hour: "numeric",
-    //     hour12: true,
-    //     timeZone: "UTC",
-    //   });
-    //   if (new Date(newOrder.createdAt).toDateString() === today) {
-    //     if (today === new Date(firstDateToCompare).toDateString()) {
-    //       setDataForFirstSet((prev) => {
-    //         if (prev.length === 0) {
-    //           return [
-    //             {
-    //               name: orderDate,
-    //               [firstDateToCompare]: newOrder.orderTotal.cartSubtotal,
-    //             },
-    //           ];
-    //         }
-    //         const length = prev.length;
-    //         if (prev[length - 1].name === orderDate) {
-    //           prev[length - 1][firstDateToCompare] +=
-    //             newOrder.orderTotal.cartSubtotal;
-    //           return [...prev];
-    //         } else {
-    //           var lastElem = {
-    //             name: orderDate,
-    //             [firstDateToCompare]:
-    //               prev[length - 1][firstDateToCompare] +
-    //               newOrder.orderTotal.cartSubtotal,
-    //           };
-    //           return [...prev,lastElem];
-    //         }
-    //       });
-    //     } else if (today === new Date(secondDateToCompare).toDateString()) {
-    //       setDataForSecondSet((prev)=>{
-    //         if(prev.length===0){
-    //           return [
-    //             {
-    //               name: orderDate,
-    //               [secondDateToCompare]: newOrder.orderTotal.cartSubtotal,
-    //             },
-    //           ];         
-    //         }
-    //         const length = prev.length;
-    //         if (prev[length - 1].name === orderDate) {
-    //           prev[length - 1][secondDateToCompare] +=
-    //             newOrder.orderTotal.cartSubtotal;
-    //           return [...prev];              
-    //         } else{
-    //           var lastElem = {
-    //             name: orderDate,
-    //             [secondDateToCompare]:
-    //               prev[length - 1][secondDateToCompare] +
-    //               newOrder.orderTotal.cartSubtotal,
-    //           };
-    //           return [...prev,lastElem];              
-    //         }           
-    //       })
-    //     }
-    //   }
-    // };
     const handler = (newOrder) => {
       if (newOrder && newOrder.orderTotal) {
         var orderDate = new Date(newOrder.createdAt).toLocaleString("en-IN", { 
@@ -155,7 +95,6 @@ const AnalyticsPageComponent = ({
       }
     };
     
-    // socket.on("newOrder",(data)=>console.log(data))
     socket.on("newOrder", handler);
     return () => socket.off("newOrder", handler);
   }, [
@@ -187,25 +126,6 @@ const AnalyticsPageComponent = ({
         )
       );
 
-    fetchOrdersForSecondDate(abctrl, secondDateToCompare)
-      .then((data) => {
-        let orderSum = 0;
-        const orders = data.map((order) => {
-          orderSum += order.orderTotal.cartSubtotal;
-          var date = new Date(order.createdAt).toLocaleString("en-US", {
-            hour: "numeric",
-            hour12: true,
-            timeZone: "UTC",
-          });
-          return { name: date, [secondDateToCompare]: orderSum };
-        });
-        setDataForSecondSet(orders);
-      })
-      .catch((er) =>
-        console.log(
-          er.response.data.message ? er.response.data.message : er.response.data
-        )
-      );
     return () => abctrl.abort();
   }, [firstDateToCompare, secondDateToCompare]);
 
