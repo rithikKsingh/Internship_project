@@ -95,6 +95,7 @@ const AnalyticsPageComponent = ({
       }
     };
     
+    // socket.on("newOrder",(data)=>console.log(data))
     socket.on("newOrder", handler);
     return () => socket.off("newOrder", handler);
   }, [
@@ -126,6 +127,25 @@ const AnalyticsPageComponent = ({
         )
       );
 
+    fetchOrdersForSecondDate(abctrl, secondDateToCompare)
+      .then((data) => {
+        let orderSum = 0;
+        const orders = data.map((order) => {
+          orderSum += order.orderTotal.cartSubtotal;
+          var date = new Date(order.createdAt).toLocaleString("en-US", {
+            hour: "numeric",
+            hour12: true,
+            timeZone: "UTC",
+          });
+          return { name: date, [secondDateToCompare]: orderSum };
+        });
+        setDataForSecondSet(orders);
+      })
+      .catch((er) =>
+        console.log(
+          er.response.data.message ? er.response.data.message : er.response.data
+        )
+      );
     return () => abctrl.abort();
   }, [firstDateToCompare, secondDateToCompare]);
 
