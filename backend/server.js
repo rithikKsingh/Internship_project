@@ -83,21 +83,6 @@ connectDB();
 app.get('/',async(req,res,next)=>{
     res.json({message:"API running..."})
    })
-   
-// app.get('/',async(req,res,next)=>{
-//     const Product=require("./models/ProductModel")
-//     try {
-//         const product=new Product
-//         product.name="Demo productName"
-//         const productSaved=await product.save()
-//         console.log(productSaved===product)
-//         const products=await Product.find()
-//         console.log(products.length)
-//         res.send("Product created "+product._id)
-//     } catch (error) {
-//         next(error)
-//     }
-// })
 
 
 app.use("/api",apiRoutes)
